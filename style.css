@@ -1,80 +1,192 @@
 * {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
 }
 
 body {
-    background: #001e4d;
+  font-family: "Nunito", sans-serif;
+  font-weight: 400;
+  height: 100vh;
+  color: #333;
+  background-image: linear-gradient(to top left, #753682 0%, #bf2e34 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.app {
-    background: #fff;
-    width: 90%;
-    max-width: 600px;
-    margin: 100px auto 0;
-    border-radius: 10px;
-    padding: 30px;
+/* -- LAYOUT */
+main {
+  position: relative;
+  width: 100rem;
+  height: 60rem;
+  background-color: rgb(255, 255, 255, 0.35);
+  backdrop-filter: blur(200px);
+  filter: blur();
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.2);
+  border-radius: 9px;
+  overflow: hidden;
+  display: flex;
 }
 
-.app h1 {
-    font-size: 25px;
-    color: #001e4d;
-    font-weight: 600;
-    border-bottom: 1px solid #333;
-    padding-bottom: 30px;
+.player {
+  flex: 50%;
+  padding: 9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.75s;
 }
 
-.quiz {
-    padding: 20px 0;
+/* --ELEMENT */
+.name {
+  position: relative;
+  font-size: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+  font-weight: 300;
+  margin-bottom: 1rem;
 }
 
-.quiz h2 {
-    font-size: 18px;
-    color: #001e4d;
-    font-weight: 600;
+.score {
+  font-size: 8rem;
+  font-weight: 300;
+  color: #c3365f;
+  margin-bottom: auto;
 }
 
-.btn {
-    background: #fff;
-    color: 222;
-    font-weight: 500;
-    width: 100%;
-    border: 1px solid #222;
-    padding: 10px;
-    margin: 10px 0;
-    text-align: left;
-    border-radius: 4px;
-    cursor: pointer;
+.player--active {
+  background-color: rgb(255, 255, 255, 0.4);
 }
 
-.btn:hover:not([disabled]) {
-    background: #222;
-    color: #fff;
+.player--active .name {
+  font-weight: 800;
 }
 
-.btn:disabled {
-    cursor: no-drop;
+.player--active .score {
+  font-weight: 500;
 }
 
-#next-btn {
-    background: #001e4d;
-    color: #fff;
-    font-weight: 500;
-    width: 150px;
-    border: 0;
-    padding: 10px;
-    margin: 20px auto 0;
-    border-radius: 4px;
-    cursor: pointer;
-    display: none;
+.player--active .current {
+  opacity: 1;
 }
 
-.correct {
-    background: #9aeabc;
+.current {
+  background-color: #c7365f;
+  opacity: 0.8;
+  border-radius: 9px;
+  color: #fff;
+  width: 65%;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.75s;
 }
 
-.incorrect {
-    background: #ff9393;
+.current-label {
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  font-size: 1.7rem;
+  color: #ddd;
+}
+
+.current-score {
+  font-size: 3.5rem;
+}
+
+/* -- ABSOLUTE POSITIONED ELEMENTS */
+
+btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #444;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 400;
+  transition: all 0.2s;
+
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+
+  padding: 0.7rem 2.5rem;
+  border-radius: 50rem;
+  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* .btn::first-letter {
+  font-size: 2.4rem;
+  display: inline-block;
+  margin-right: 0.7rem;
+} */
+
+.btn--new {
+  top: 5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 5rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.btn--roll {
+  top: 40rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 5rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.btn--hold {
+  top: 50rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 5rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.btn:active {
+  transform: translate(-50%, 3px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.dice {
+  position: absolute;
+  left: 50%;
+  top: 16.5rem;
+  transform: translateX(-50%);
+  height: 20rem;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+}
+
+.player--winner {
+  background-color: #2f2f2f;
+}
+
+.player--winner .name {
+  font-weight: 700;
+  color: #c7365f;
+}
+
+.hidden {
+  display: none;
 }

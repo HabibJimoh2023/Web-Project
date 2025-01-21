@@ -1,121 +1,96 @@
-const questions = [
-    {
-        questions: "Which is the largest animal in the world?",
-        answers: [
-            { text: "Shark", correct: false },
-            { text: "Blue Whale", correct: true },
-            { text: "Elephant", correct: false },
-            { text: "Giraffe", correct: false },
-        ]
-    },
-    {
-        questions: "Which is te smallest country in the world?",
-        answers: [
-            { text: "Vetican City", correct: true },
-            { text: "Bhutan", correct: false },
-            { text: "Nepal", correct: false },
-            { text: "Sri Lanka", correct: false },
-        ]
-    },
-    {
-        questions: "Which is the largest desert in the World?",
-        answers: [
-            { text: "Kalahari", correct: false },
-            { text: "Gobi", correct: false },
-            { text: "Sahara", correct: false },
-            { text: "Antarctica", correct: true },
-        ]
-    },
-    {
-        questions: "Which is the smallest continent in the world?",
-        answers: [
-            { text: "Asia", correct: false },
-            { text: "Australia", correct: true },
-            { text: "Arctic", correct: false },
-            { text: "Africa", correct: false },
-        ]
-    }
-];
+"use strict";
 
-const questionElement = document.getElementById("question");
-const answerButtons = document.getElementById("answer-buttons");
-const nextButton = document.getElementById("next-btn");
+//Selecting Elements
+const player0El = document.querySelector(".player--0");
+const player1El = document.querySelector(".player--1");
+const score0El = document.querySelector("#score--0");
+const score1El = document.getElementById("score--1");
+const current0El = document.getElementById("current--0");
+const current1El = document.getElementById("current--1");
+const diceEl = document.querySelector(".dice");
+const btnNew = document.querySelector(".btn--new");
+const btnRoll = document.querySelector(".btn--roll");
+const btnHold = document.querySelector(".btn--hold");
 
-let currentQuestionIndex = 0;
-let score = 0;
+//Starting Conditions
 
-function startQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    nextButton.innerHTML = "Next";
-    showQuestion();
-}
+let scores, currentScore, activePlayer, playing;
 
-function showQuestion() {
-    resetState();
-    let currentQuestion = questions[currentQuestionIndex];
-    let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.questions;
+const init = function () {
+  scores = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
 
-    currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerHTML = answer.text;
-        button.classList.add("btn");
-        answerButtons.appendChild(button);
-        if (answer.correct) {
-            button.dataset.correct = answer.correct;
-        }
-        button.addEventListener("click", selectAnswer);
-    });
-}
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  current0El.textContent = 0;
+  current1El.textContent = 0;
 
-function resetState() {
-    nextButton.style.display = "none";
-    while (answerButtons.firstChild) {
-        answerButtons.removeChild(answerButtons.firstChild);
-    }
-}
+  diceEl.classList.add("hidden");
+  player0El.classList.remove("player--winner");
+  player1El.classList.remove("player--winner");
+  player0El.classList.add("player--active");
+  player1El.classList.remove("player--active");
+};
+init();
 
-function selectAnswer(e) {
-    const selectedBtn = e.target;
-    const isCorrect = selectedBtn.dataset.correct === "true";
-    if (isCorrect) {
-        selectedBtn.classList.add("correct");
-        score++;
+btnNew.addEventListener("click", init);
+
+const switchPlayer = function () {
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
+  currentScore = 0;
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  player0El.classList.toggle("player--active");
+  player1El.classList.toggle("player--active");
+};
+
+//Rolling dice functionality
+btnRoll.addEventListener("click", function () {
+  if (playing) {
+    // 1. Generate a random dice roll
+    const dice = Math.trunc(Math.random() * 6) + 1;
+
+    // 2. Display dice
+    diceEl.classList.remove("hidden");
+    diceEl.src = `dice-${dice}.png`;
+
+    // 3. Check for rolled 1:
+    if (dice !== 1) {
+      // Add dice to current score
+      //currentScore = currentScore + dice;
+      currentScore += dice;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
     } else {
-        selectedBtn.classList.add("incorrect");
+      //Switch to next player
+      switchPlayer();
     }
-    Array.from(answerButtons.children).forEach(button => {
-        if (button.dataset.correct === "true") {
-            button.classList.add("correct");
-        }
-        button.disabled = true;
-    });
-    nextButton.style.display = "block";
-}
-
-function showScore() {
-    resetState();
-    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
-    nextButton.innerHTML = "Play Again";
-    nextButton.style.display = "block";
-}
-
-function handleNextButton() {
-    currentQuestionIndex++
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-    } else {
-        showScore();
-    }
-}
-nextButton.addEventListener("click", () => {
-    if (currentQuestionIndex < questions.length) {
-        handleNextButton();
-    } else {
-        startQuiz();
-    }
+  }
 });
 
-startQuiz();
+btnHold.addEventListener("click", function () {
+  if (playing) {
+    // 1. Add current score to active player's score
+    scores[activePlayer] += currentScore;
+    //scores[1] = scores[1] + currentScore
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
 
+    //2. Check if player's score is >= 20
+    if (scores[activePlayer] >= 20) {
+      //Finish the game
+      playing = false;
+      diceEl.classList.add("hidden");
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add("player--winner");
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove("player--active");
+    } else {
+      //Switch to the next player
+      switchPlayer();
+    }
+  }
+});
