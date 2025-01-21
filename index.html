@@ -5,31 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>PIG GAME</title>
+    <title>Guess My Number</title>
   </head>
   <body>
+    <header>
+      <h1>GUESS MY NUMBER!</h1>
+      <p class="between">(Between 1 and 20)</p>
+      <button class="btn again">Again</button>
+      <div class="number">?</div>
+    </header>
     <main>
-      <section class="player player--0 player--active">
-        <h2 class="name" id="name--0">Player 1</h2>
-        <p class="score" id="score--0">43</p>
-        <div class="current">
-          <p class="current-label">Current</p>
-          <p class="current-score" id="current--0">0</p>
-        </div>
+      <section class="left">
+        <input type="number" class="guess" />
+        <button class="btn check">Check!</button>
       </section>
-      <section class="player player--1">
-        <h2 class="name" id="name--1">Player 2</h2>
-        <p class="score" id="score--1">24</p>
-        <div class="current">
-          <p class="current-label">Current</p>
-          <p class="current-score" id="current--1">0</p>
-        </div>
+      <section class="right">
+        <p class="message">Start Guessing...</p>
+        <p class="label-score">Score: <span class="score">20</span></p>
+        <p class="label-highscore">
+          HighScore: <span class="highscore">0</span>
+        </p>
       </section>
-
-      <img src="dice-5.png" alt="playing dice" class="dice" />
-      <button class="btn btn--new">New Game</button>
-      <button class="btn btn--roll">Roll Dice</button>
-      <button class="btn btn--hold">Hold</button>
     </main>
     <script src="script.js"></script>
   </body>

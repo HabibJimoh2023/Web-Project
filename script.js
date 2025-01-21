@@ -1,96 +1,111 @@
+/* WHAT IS DOM AND DOM MANIPULATION
+DOM is an acronym that stand for Document Object Model: It is a Structured representation of HTML Document Allows JavaScript to access HTML Element and styles to manipulate them.  
+
+//REFACTORING OUR CODE SIMPLY MEAN RESTRUCTURING THE CODE IN OTHER TO AVOID DUPLICATE CODE...
+
+COMMON PRINCIPLE IN CODING
+// DRY - THE PRINCIPLE OF DONT REPEAT YOUR SELF I.E DRY PRINCIPLE.
+// KISS - KEEP IT SIMPLE STUPID 
+// YAGNI - YOU AREN'T GONNA NEED IT.
+
+
+
+
+console.log(document.querySelector(".message").textContent);
+
+document.querySelector(".message").textContent = "Correct Number!";
+
+console.log(document.querySelector(".message").textContent);
+
+document.querySelector(".number").textContent = 13;
+
+document.querySelector(".score").textContent = 10;
+
+document.querySelector(".guess").value = 23;
+
+console.log(document.querySelector(".guess").value);
+*/
+//Math.random()// for random number in our code!
+
 "use strict";
 
-//Selecting Elements
-const player0El = document.querySelector(".player--0");
-const player1El = document.querySelector(".player--1");
-const score0El = document.querySelector("#score--0");
-const score1El = document.getElementById("score--1");
-const current0El = document.getElementById("current--0");
-const current1El = document.getElementById("current--1");
-const diceEl = document.querySelector(".dice");
-const btnNew = document.querySelector(".btn--new");
-const btnRoll = document.querySelector(".btn--roll");
-const btnHold = document.querySelector(".btn--hold");
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
+let score = 20;
+let highscore = 0;
 
-//Starting Conditions
-
-let scores, currentScore, activePlayer, playing;
-
-const init = function () {
-  scores = [0, 0];
-  currentScore = 0;
-  activePlayer = 0;
-  playing = true;
-
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-  current0El.textContent = 0;
-  current1El.textContent = 0;
-
-  diceEl.classList.add("hidden");
-  player0El.classList.remove("player--winner");
-  player1El.classList.remove("player--winner");
-  player0El.classList.add("player--active");
-  player1El.classList.remove("player--active");
-};
-init();
-
-btnNew.addEventListener("click", init);
-
-const switchPlayer = function () {
-  document.getElementById(`current--${activePlayer}`).textContent = 0;
-  currentScore = 0;
-  activePlayer = activePlayer === 0 ? 1 : 0;
-  player0El.classList.toggle("player--active");
-  player1El.classList.toggle("player--active");
+const displayMessage = function (message) {
+  document.querySelector(".message").textContent = message;
 };
 
-//Rolling dice functionality
-btnRoll.addEventListener("click", function () {
-  if (playing) {
-    // 1. Generate a random dice roll
-    const dice = Math.trunc(Math.random() * 6) + 1;
+document.querySelector(".check").addEventListener("click", function () {
+  const guess = Number(document.querySelector(".guess").value);
 
-    // 2. Display dice
-    diceEl.classList.remove("hidden");
-    diceEl.src = `dice-${dice}.png`;
+  // When there is no input!
+  if (!guess) {
+    // document.querySelector(".message").textContent = "No Number";
+    displayMessage("No number!");
 
-    // 3. Check for rolled 1:
-    if (dice !== 1) {
-      // Add dice to current score
-      //currentScore = currentScore + dice;
-      currentScore += dice;
-      document.getElementById(`current--${activePlayer}`).textContent =
-        currentScore;
+    // When Player Wins
+  } else if (guess === secretNumber) {
+    document.querySelector(".message").textContent = "Correct Number!";
+    document.querySelector(".number").textContent = secretNumber;
+
+    document.querySelector("body").style.backgroundColor = "#60b347";
+    document.querySelector(".number").style.width = "30rem";
+
+    if (score > highscore) {
+      highscore = score;
+      document.querySelector(".highscore").textContent = highscore;
+    }
+
+    //WHEN GUESS IS WRONG
+  } else if (guess !== secretNumber) {
+    if (score > 1) {
+      document.querySelector(".message").textContent =
+        guess > secretNumber ? "Too High!" : "Too Low";
+      score--;
+      document.querySelector(".score").textContent = score;
     } else {
-      //Switch to next player
-      switchPlayer();
+      document.querySelector(".message").textContent = "You Lost The Game!";
+      document.querySelector(".score").textContent = 0;
+      document.querySelector("body").style.backgroundColor = "red";
     }
   }
+
+  //     //When Guess is too high
+  //   } else if (guess > secretNumber) {
+  //     if (score > 1) {
+  //       document.querySelector(".message").textContent = "Too High!";
+  //       score--;
+  //       document.querySelector(".score").textContent = score;
+  //     } else {
+  //       document.querySelector(".message").textContent = "You Lost The Game!";
+  //       document.querySelector(".score").textContent = 0;
+  //     }
+
+  //     //When Guess is too low
+  //   } else if (guess < secretNumber) {
+  //     if (score > 1) {
+  //       document.querySelector(".message").textContent = "Too Low!";
+  //       score--;
+  //       document.querySelector(".score").textContent = score;
+  //     } else {
+  //       document.querySelector(".message").textContent = "You Lost The Game!";
+  //       document.querySelector(".score").textContent = 0;
+  //     }
+  //   }
 });
 
-btnHold.addEventListener("click", function () {
-  if (playing) {
-    // 1. Add current score to active player's score
-    scores[activePlayer] += currentScore;
-    //scores[1] = scores[1] + currentScore
-    document.getElementById(`score--${activePlayer}`).textContent =
-      scores[activePlayer];
+//PLAY AGAIN
 
-    //2. Check if player's score is >= 20
-    if (scores[activePlayer] >= 20) {
-      //Finish the game
-      playing = false;
-      diceEl.classList.add("hidden");
-      document
-        .querySelector(`.player--${activePlayer}`)
-        .classList.add("player--winner");
-      document
-        .querySelector(`.player--${activePlayer}`)
-        .classList.remove("player--active");
-    } else {
-      //Switch to the next player
-      switchPlayer();
-    }
-  }
+document.querySelector(". btn again").addEventListener("click", function () {
+  document.querySelector(".message").textContent = "Start Guessing...";
+  score = 20;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+
+  document.querySelector(".score").textContent = score;
+  document.querySelector(".number").textContent = "?";
+  document.querySelector(".guess").value = "";
+  document.querySelector("body").style.backgroundColor = "#222";
+  document.querySelector(".number").style.width = "15rem";
 });
